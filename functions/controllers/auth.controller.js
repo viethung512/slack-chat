@@ -1,5 +1,6 @@
 const firebase = require('firebase');
 const { validationResult } = require('express-validator');
+const md5 = require('md5');
 const { db } = require('../utils/admin');
 const firebaseConfig = require('../utils/firebaseConfig');
 
@@ -50,6 +51,7 @@ const register = (req, res, next) => {
       const userCredentials = {
         email: email,
         displayName: username,
+        avatarUrl: `http://gravatar.com/avatar/${md5(email)}?d=identicon`,
         createdAt: Date.now(),
       };
 
@@ -76,4 +78,9 @@ const register = (req, res, next) => {
     });
 };
 
-module.exports = { signIn, register };
+const getAuthUser = (req, res, next) => {
+  const userData = req.user;
+  return res.json(userData);
+};
+
+module.exports = { signIn, register, getAuthUser };
