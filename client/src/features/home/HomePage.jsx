@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.css';
-import { Spin, Layout, Breadcrumb } from 'antd';
 import { useSelector } from 'react-redux';
+import { Spin, Layout, Breadcrumb } from 'antd';
 import { LoadingIcon } from '../../app/layout/common/Icons';
 import SidePanel from '../panel/SidePanel';
 
@@ -10,7 +10,7 @@ const { Header, Content, Footer } = Layout;
 function HomePage(props) {
   const { loading, type } = useSelector(state => state.async);
   const tip =
-    type === 'signIn' || type === 'fetchCurrentUser'
+    type === 'signIn' || type === 'getAuthUser'
       ? 'Preparing chat...'
       : 'Signing out...';
 

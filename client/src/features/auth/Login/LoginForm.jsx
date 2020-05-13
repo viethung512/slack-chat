@@ -20,7 +20,8 @@ function LoginForm(props) {
 
   const handleSubmit = values => {
     const { email, password } = values;
-    dispatch(signIn({ email, password }, history));
+    const userCredentials = { email, password };
+    dispatch(signIn(userCredentials, history));
   };
 
   return (
@@ -61,7 +62,7 @@ function LoginForm(props) {
 
           {error && (
             <Form.Item style={{ marginBottom: 4, textAlign: 'center' }}>
-              <Text type='danger'>{error.message}</Text>
+              <Text type='danger'>{error.general.msg}</Text>
             </Form.Item>
           )}
           <Form.Item>

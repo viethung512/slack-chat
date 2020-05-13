@@ -1,31 +1,29 @@
 import axios from 'axios';
-import firebase from '../../app/utils/firebaseConfig';
 import {
   asyncActionStart,
   asyncActionFinish,
   asyncActionError,
 } from '../async/async.actions';
-import { FETCH_CURRENT_USER } from './user.constants';
-
-export const fetchCurrentUser = history => dispatch => {
-  try {
-    dispatch(asyncActionStart('fetchCurrentUser'));
-
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        dispatch({ type: FETCH_CURRENT_USER, payload: { user } });
-      }
-
-      dispatch(asyncActionFinish());
-      history.push('/');
-    });
-  } catch (err) {
-    dispatch(asyncActionError(err));
-  }
-};
+import { SET_AUTH_USER } from './user.constants';
+import { SET_AUTHENTICATED } from '../auth/auth.constants';
 
 export const getAuthUserData = () => dispatch => {
-  dispatch(asyncActionStart());
+  dispatch(asyncActionStart('getAuthUser'));
 
-  axios.post('/auth/login');
+  return axios
+    .get('/auth')
+    .then(res => {
+      dispatch(setAuthUser(res.data));
+      dispatch({ type: SET_AUTHENTICATED });
+      dispatch(asyncActionFinish());
+    })
+    .catch(err => {
+      console.error(err);
+      dispatch(asyncActionError(err));
+    });
 };
+
+export const setAuthUser = userData => ({
+  type: SET_AUTH_USER,
+  payload: { user: userData },
+});

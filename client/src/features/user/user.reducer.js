@@ -1,17 +1,14 @@
-import { FETCH_CURRENT_USER } from './user.constants';
+import { SET_AUTH_USER } from './user.constants';
 
 const userReducerInitialState = {
   current: null,
-  loading: true,
 };
 const userReducer = (state = userReducerInitialState, { type, payload }) => {
   switch (type) {
-    case FETCH_CURRENT_USER:
-      const { user = null } = payload;
+    case SET_AUTH_USER:
       return {
         ...state,
-        current: user,
-        loading: false,
+        current: payload.user,
       };
     default:
       return state;

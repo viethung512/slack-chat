@@ -1,67 +1,47 @@
-import firebase from '../../app/utils/firebaseConfig';
-import md5 from 'md5';
+import axios from 'axios';
 import {
   asyncActionStart,
   asyncActionFinish,
   asyncActionError,
 } from '../async/async.actions';
-import { SIGN_OUT, SIGN_IN } from './auth.constants';
-import { FETCH_CURRENT_USER } from '../user/user.constants';
+import { SET_UNAUTHENTICATED } from './auth.constants';
+import { setAuthHeader } from '../../app/utils/helper';
+import { getAuthUserData } from '../user/user.actions';
 
-export const signIn = ({ email, password }, history) => async dispatch => {
-  try {
-    dispatch(asyncActionStart('signIn'));
-    const { user } = await firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password);
+export const signIn = (userCredentials, history) => async dispatch => {
+  dispatch(asyncActionStart('signIn'));
 
-    // dispatch({ type: SIGN_IN });
-    dispatch({ type: FETCH_CURRENT_USER, payload: { user } });
-    dispatch(asyncActionFinish());
-    history.push('/');
-  } catch (err) {
-    console.log(err);
-    dispatch(asyncActionError({ message: 'Login fail' }));
-  }
+  return axios
+    .post('/auth/login', userCredentials)
+    .then(res => {
+      setAuthHeader(res.data.token);
+      dispatch(getAuthUserData());
+      dispatch(asyncActionFinish());
+      history.push('/home');
+    })
+    .catch(err => {
+      dispatch(asyncActionError(err.response.data.errors));
+    });
 };
 
-export const register = ({ username, email, password }) => async dispatch => {
-  try {
-    dispatch(asyncActionStart());
-    const { user } = await firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password);
-    await user.updateProfile({
-      displayName: username,
-      photoURL: `http://gravatar.com/avatar/${md5(user.email)}?d=identicon`,
+export const register = (userCredentials, history) => async dispatch => {
+  dispatch(asyncActionStart());
+
+  return axios
+    .post('/auth/register', userCredentials)
+    .then(res => {
+      setAuthHeader(res.data.token);
+      dispatch(getAuthUserData());
+      dispatch(asyncActionFinish());
+      history.push('/home');
+    })
+    .catch(err => {
+      dispatch(asyncActionError(err.response.data.errors));
     });
-
-    const newUser = {
-      name: user.displayName,
-      avatar: user.photoURL,
-      createdAt: Date.now(),
-    };
-
-    await firebase.database().ref('users').child(user.uid).set(newUser);
-
-    dispatch({ type: SIGN_IN });
-    dispatch({ type: FETCH_CURRENT_USER, payload: { user } });
-    dispatch(asyncActionFinish());
-  } catch (err) {
-    console.log(err);
-    dispatch(asyncActionError(err));
-  }
 };
 
 export const signOut = () => async dispatch => {
-  try {
-    dispatch(asyncActionStart('signOut'));
-    await firebase.auth().signOut();
-
-    // dispatch({ type: SIGN_OUT });
-    dispatch({ type: FETCH_CURRENT_USER, payload: { user: null } });
-    dispatch(asyncActionFinish());
-  } catch (err) {
-    dispatch(asyncActionError(err));
-  }
+  localStorage.removeItem('FBToken');
+  delete axios.defaults.headers.common['Authorization'];
+  dispatch({ type: SET_UNAUTHENTICATED });
 };

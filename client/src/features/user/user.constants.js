@@ -1,1 +1,1 @@
-export const FETCH_CURRENT_USER = 'FETCH_CURRENT_USER';
+export const SET_AUTH_USER = 'SET_AUTH_USER';

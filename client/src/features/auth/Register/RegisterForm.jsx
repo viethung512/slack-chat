@@ -1,6 +1,6 @@
 import React from 'react';
 import './style.css';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, Form, Button, Typography, Input } from 'antd';
 import {
@@ -16,13 +16,14 @@ const { Title, Text } = Typography;
 
 function RegisterForm(props) {
   const dispatch = useDispatch();
-
+  const history = useHistory();
   const [form] = Form.useForm();
   const { loading, error } = useSelector(state => state.async);
 
   const handleSubmit = values => {
-    const { email, password, username } = values;
-    dispatch(register({ username, email, password }));
+    const { email, password, username, confirmPassword } = values;
+    const userCredentials = { username, email, password, confirmPassword };
+    dispatch(register(userCredentials, history));
   };
 
   const validateConfirmPassword = (rule, value) => {

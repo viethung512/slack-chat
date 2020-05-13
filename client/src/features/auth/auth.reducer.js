@@ -1,21 +1,19 @@
-import { SIGN_IN, SIGN_OUT } from './auth.constants';
+import { SET_AUTHENTICATED, SET_UNAUTHENTICATED } from './auth.constants';
 
 const authReducerInitialState = {
-  authenticated: false,
+  authenticated: null,
 };
 const authReducer = (state = authReducerInitialState, { type, payload }) => {
   switch (type) {
-    case SIGN_IN:
+    case SET_AUTHENTICATED:
       return {
         ...state,
         authenticated: true,
       };
-
-    case SIGN_OUT:
+    case SET_UNAUTHENTICATED:
       return {
         ...state,
-        authenticated: false,
-        current: null,
+        authenticated: null,
       };
     default:
       return state;

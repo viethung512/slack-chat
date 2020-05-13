@@ -3,16 +3,17 @@ import { Route, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 function PrivateRoute({ component: Component, ...rest }) {
-  const { loading } = useSelector(state => state.async);
-  const { current } = useSelector(state => state.user);
-
-  const authenticated = !loading && !!current;
+  const { authenticated } = useSelector(state => state.auth);
 
   return (
     <Route
       {...rest}
       render={props =>
-        !authenticated ? <Redirect to='/login' /> : <Component {...props} />
+        authenticated === false ? (
+          <Redirect to='/login' />
+        ) : (
+          <Component {...props} />
+        )
       }
     />
   );

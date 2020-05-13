@@ -1,23 +1,25 @@
 import React, { useState } from 'react';
 import './style.css';
+import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { Layout } from 'antd';
 import UserPanel from './UserPanel';
 import HeaderPanel from './HeaderPanel';
-import { useDispatch, useSelector } from 'react-redux';
 import { signOut } from '../auth/auth.actions';
 
 const { Sider } = Layout;
 
 function SidePanel(props) {
   const dispatch = useDispatch();
+  const history = useHistory();
   const user = useSelector(state => state.auth.current);
   const [collapsed, setCollapsed] = useState(false);
 
-  const onCollapse = collapsed => {
-    setCollapsed(collapsed);
+  const onCollapse = collapsed => setCollapsed(collapsed);
+  const handleSignOut = () => {
+    dispatch(signOut());
+    history.push('/login');
   };
-
-  const handleSignOut = () => dispatch(signOut());
 
   return (
     <Sider
