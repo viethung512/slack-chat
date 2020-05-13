@@ -1,0 +1,25 @@
+.side-panel {
+  background-color: #4c3c4c;
+}
+
+.side-panel__logo {
+  margin-top: 12px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.side-panel__logo-icon {
+  margin-right: 4px;
+  font-size: 50px;
+}
+
+.side-panel__logo-title {
+  margin-left: 4px;
+  color: #fff !important;
+}
+
+.side-panel__menu {
+  background-color: #4c3c4c !important;
+}

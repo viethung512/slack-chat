@@ -1,0 +1,39 @@
+.register {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+}
+
+.register__form {
+  width: 400px;
+}
+
+.register__form-title {
+  color: var(--color-orange) !important;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin-bottom: 0 !important;
+}
+
+.register__form-title-icon {
+  font-size: 80px;
+}
+
+.register__form-submit {
+  width: 100%;
+
+  background-color: var(--color-orange) !important;
+  color: #fff;
+  border-color: var(--color-orange) !important;
+}
+
+.register__form-info {
+  width: 100%;
+  display: block;
+  text-align: center;
+}
