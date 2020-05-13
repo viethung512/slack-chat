@@ -6,7 +6,7 @@ import {
 } from '../async/async.actions';
 import { SET_UNAUTHENTICATED } from './auth.constants';
 import { setAuthHeader } from '../../app/utils/helper';
-import { getAuthUserData } from '../user/user.actions';
+import { getAuthUserData, setAuthUser } from '../user/user.actions';
 
 export const signIn = (userCredentials, history) => async dispatch => {
   dispatch(asyncActionStart('signIn'));
@@ -20,7 +20,10 @@ export const signIn = (userCredentials, history) => async dispatch => {
       history.push('/home');
     })
     .catch(err => {
-      dispatch(asyncActionError(err.response.data.errors));
+      const error = err.response.data.errors
+        ? err.response.data.errors
+        : { general: { msg: 'Some thing went wrong' } };
+      dispatch(asyncActionError(error));
     });
 };
 
@@ -36,12 +39,16 @@ export const register = (userCredentials, history) => async dispatch => {
       history.push('/home');
     })
     .catch(err => {
-      dispatch(asyncActionError(err.response.data.errors));
+      const error = err.response.data.errors
+        ? err.response.data.errors
+        : { general: { msg: 'Some thing went wrong' } };
+      dispatch(asyncActionError(error));
     });
 };
 
 export const signOut = () => async dispatch => {
   localStorage.removeItem('FBToken');
   delete axios.defaults.headers.common['Authorization'];
+  dispatch(setAuthUser(null));
   dispatch({ type: SET_UNAUTHENTICATED });
 };

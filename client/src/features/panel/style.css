@@ -23,3 +23,16 @@
 .side-panel__menu {
   background-color: #4c3c4c !important;
 }
+
+.side-panel-item {
+  width: 100%;
+  height: 48px;
+  color: #fff;
+  text-align: left;
+}
+
+.side-panel__channels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

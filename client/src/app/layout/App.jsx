@@ -12,6 +12,7 @@ import PrivateRoute from './common/PrivateRoute';
 import { getAuthUserData } from '../../features/user/user.actions';
 import { signOut } from '../../features/auth/auth.actions';
 import { SET_AUTHENTICATED } from '../../features/auth/auth.constants';
+import ModalManager from '../../features/modal/ModalManager';
 
 const token = localStorage.getItem('FBToken');
 
@@ -40,6 +41,7 @@ function App() {
 
   return (
     <div className='app'>
+      <ModalManager />
       <Switch>
         <PrivateRoute exact path='/home' component={HomePage} />
         <Route exact path='/login' component={LoginForm} />

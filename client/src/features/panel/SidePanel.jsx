@@ -6,13 +6,15 @@ import { Layout } from 'antd';
 import UserPanel from './UserPanel';
 import HeaderPanel from './HeaderPanel';
 import { signOut } from '../auth/auth.actions';
+import Channels from './ChannelsPanel';
+import { openModal } from '../modal/modal.actions';
 
 const { Sider } = Layout;
 
 function SidePanel(props) {
   const dispatch = useDispatch();
   const history = useHistory();
-  const user = useSelector(state => state.auth.current);
+  const { current } = useSelector(state => state.user);
   const [collapsed, setCollapsed] = useState(false);
 
   const onCollapse = collapsed => setCollapsed(collapsed);
@@ -20,6 +22,7 @@ function SidePanel(props) {
     dispatch(signOut());
     history.push('/login');
   };
+  const addChannel = () => dispatch(openModal('ChannelModal'));
 
   return (
     <Sider
@@ -30,7 +33,8 @@ function SidePanel(props) {
       width={250}
     >
       <HeaderPanel collapsed={collapsed} />
-      <UserPanel signOut={handleSignOut} user={user} />
+      <UserPanel signOut={handleSignOut} currentUser={current} />
+      <Channels addChannel={addChannel} />
     </Sider>
   );
 }
