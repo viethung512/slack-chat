@@ -14,7 +14,7 @@ const signIn = (req, res, next) => {
 
   const { email, password } = req.body;
 
-  firebase
+  return firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
     .then(data => data.user.getIdToken())
@@ -38,7 +38,7 @@ const register = (req, res, next) => {
   const { username, email, password } = req.body;
   let token, userId;
 
-  firebase
+  return firebase
     .auth()
     .createUserWithEmailAndPassword(email, password)
     .then(data => {
