@@ -1,6 +1,6 @@
 const firebase = require('firebase');
 const { validationResult } = require('express-validator');
-const { admin, db } = require('../utils/admin');
+const { db } = require('../utils/admin');
 const firebaseConfig = require('../utils/firebaseConfig');
 
 firebase.initializeApp(firebaseConfig);
@@ -9,7 +9,7 @@ const signIn = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ errors: errors.mapped() });
   }
 
   const { email, password } = req.body;
@@ -21,16 +21,18 @@ const signIn = (req, res, next) => {
     .then(token => res.json({ token }))
     .catch(err => {
       console.error(err.code);
-      return res
-        .status(403)
-        .json({ msg: 'Wrong credential, please try again' });
+      return res.status(403).json({
+        errors: {
+          general: { msg: 'Wrong credential, please try again' },
+        },
+      });
     });
 };
 
 const register = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ errors: errors.mapped() });
   }
 
   const { username, email, password } = req.body;
@@ -59,11 +61,18 @@ const register = (req, res, next) => {
     .catch(err => {
       console.log(err);
       if (err.code === 'auth/email-already-in-use') {
-        return res.status(400).json({ msg: 'Email is already used' });
+        return res.status(400).json({
+          errors: {
+            general: { msg: 'Email is already used' },
+          },
+        });
       }
-      return res
-        .status(500)
-        .json({ msg: 'Some thing went wrong, please try again' });
+
+      return res.status(500).json({
+        errors: {
+          general: { msg: 'Some thing went wrong, please try again' },
+        },
+      });
     });
 };
 

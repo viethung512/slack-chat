@@ -22,5 +22,12 @@ module.exports = {
     check('password')
       .isLength({ min: 6 })
       .withMessage('Please enter password with 6 or more character'),
+    check('confirmPassword').custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error('Password does not match');
+      } else {
+        return true;
+      }
+    }),
   ],
 };
